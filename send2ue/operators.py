@@ -65,7 +65,7 @@ class Send2Ue(bpy.types.Operator):
                     description = message.format(
                         attribute=utilities.get_asset_name_from_file_name(file_name)
                     )
-                    bpy.context.workspace.status_text_set_internal(description)
+                    bpy.context.window_manager.status_text_set(description)
                 except Exception as error:
                     self.escape_operation(context)
                     raise error
@@ -73,13 +73,13 @@ class Send2Ue(bpy.types.Operator):
             if self.escape:
                 bpy.types.STATUSBAR_HT_header.remove(self.draw_progress)
                 context.window_manager.event_timer_remove(self.timer)
-                bpy.context.workspace.status_text_set_internal(None)
+                bpy.context.window_manager.status_text_set(None)
                 self.post_operation()
                 return {'FINISHED'}
 
             if self.done:
                 context.window_manager.send2ue.progress = 100
-                bpy.context.workspace.status_text_set_internal('Finished!')
+                bpy.context.window_manager.status_text_set('Finished!')
                 bpy.context.window_manager.progress_end()
                 self.escape = True
         return {'RUNNING_MODAL'}
@@ -92,7 +92,7 @@ class Send2Ue(bpy.types.Operator):
             # initialize the progress bar
             self.execution_queue.queue.clear()
             context.window_manager.send2ue.progress = 0
-            bpy.context.workspace.status_text_set_internal('Validating...')
+            bpy.context.window_manager.status_text_set('Validating...')
 
             # run the full send to unreal operation which queues all the jobs
             try:
@@ -141,7 +141,7 @@ class Send2Ue(bpy.types.Operator):
         if self.timer:
             bpy.types.STATUSBAR_HT_header.remove(self.draw_progress)
             context.window_manager.event_timer_remove(self.timer)
-        bpy.context.workspace.status_text_set_internal(None)
+        bpy.context.window_manager.status_text_set(None)
         self.post_operation()
         return {'FINISHED'}
 
